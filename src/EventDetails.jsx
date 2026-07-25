@@ -1,105 +1,126 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import "./App.css";
 
 function EventDetails() {
   const navigate = useNavigate();
+  const { eventId } = useParams();
 
-  return (
-    <div className="event-details-page">
+  const events = {
+    "tech-symposium": {
+      title: "Tech Symposium 2026",
+      category: "TECHNOLOGY",
+      date: "24 JUL 2026",
+      time: "10:00 AM",
+      location: "Main Auditorium",
+      description:
+        "Explore the latest trends in technology and innovation. Connect with students, professionals, and technology enthusiasts.",
+    },
 
-      <header className="event-details-header">
+    "campus-hackathon": {
+      title: "Campus Hackathon",
+      category: "HACKATHON",
+      date: "28 JUL 2026",
+      time: "9:00 AM",
+      location: "Innovation Lab",
+      description:
+        "Build something amazing with your team and solve real-world problems through technology.",
+    },
+
+    "design-thinking-workshop": {
+      title: "Design Thinking Workshop",
+      category: "WORKSHOP",
+      date: "02 AUG 2026",
+      time: "2:00 PM",
+      location: "Seminar Hall",
+      description:
+        "Learn how to understand problems, generate ideas, and create innovative solutions using design thinking.",
+    },
+
+    "coding-club-meetup": {
+      title: "Coding Club Meetup",
+      category: "COMMUNITY",
+      date: "08 AUG 2026",
+      time: "4:30 PM",
+      location: "Student Center",
+      description:
+        "Connect with fellow developers, share knowledge, and learn together as a coding community.",
+    },
+  };
+
+  const event = events[eventId];
+
+  if (!event) {
+    return (
+      <div className="event-details-page">
+
+        <h1>
+          Event not found
+        </h1>
 
         <button
-          className="back-button"
+          className="primary-button"
           onClick={() => navigate("/events")}
         >
           ← Back to Events
         </button>
 
-        <div className="logo">
-          <span className="logo-mark">✦</span>
-          CampusFlow
-        </div>
+      </div>
+    );
+  }
 
-      </header>
+  return (
+    <div className="event-details-page">
+
+      <button
+        className="back-button"
+        onClick={() => navigate("/events")}
+      >
+        ← Back to Events
+      </button>
 
 
-      <main className="event-details-container">
+      <main className="event-details-card">
 
-        <p className="eyebrow">
-          CAMPUS EVENT
-        </p>
+        <span className="event-category">
+          {event.category}
+        </span>
+
 
         <h1>
-          Tech Symposium 2026
+          {event.title}
         </h1>
 
+
         <p className="event-details-description">
-          Explore the latest technologies, connect with industry experts,
-          and learn from students and professionals.
+          {event.description}
         </p>
 
 
-        <div className="event-info-grid">
+        <div className="event-meta">
 
-          <div className="event-info-card">
-
+          <div>
             <span>DATE</span>
-
-            <strong>
-              24 July 2026
-            </strong>
-
+            <strong>{event.date}</strong>
           </div>
 
 
-          <div className="event-info-card">
-
+          <div>
             <span>TIME</span>
-
-            <strong>
-              10:00 AM
-            </strong>
-
+            <strong>{event.time}</strong>
           </div>
 
 
-          <div className="event-info-card">
-
+          <div>
             <span>LOCATION</span>
-
-            <strong>
-              Main Auditorium
-            </strong>
-
+            <strong>{event.location}</strong>
           </div>
-
-        </div>
-
-
-        <div className="event-description-section">
-
-          <h2>
-            About this event
-          </h2>
-
-          <p>
-            The Tech Symposium brings together students, developers,
-            researchers, and technology enthusiasts to explore new ideas
-            and innovations.
-          </p>
-
-          <p>
-            Attend talks, participate in discussions, and connect with
-            people who are passionate about technology.
-          </p>
 
         </div>
 
 
         <button
-          className="primary-button register-button"
-          onClick={() => alert("You have registered for this event!")}
+          className="primary-button"
+          onClick={() => alert("Event registration will be connected to the backend later.")}
         >
           Register for Event →
         </button>

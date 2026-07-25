@@ -4,8 +4,48 @@ import "./App.css";
 function Projects() {
   const navigate = useNavigate();
 
+  const projects = [
+    {
+      id: "campus-connect",
+      title: "Campus Connect",
+      category: "WEB DEVELOPMENT",
+      description:
+        "Build a platform that helps students connect, collaborate, and discover opportunities.",
+      members: "4 members",
+    },
+
+    {
+      id: "ai-health-assistant",
+      title: "AI Health Assistant",
+      category: "ARTIFICIAL INTELLIGENCE",
+      description:
+        "Create an intelligent assistant that helps users understand their health information.",
+      members: "3 members",
+    },
+
+    {
+      id: "smart-campus",
+      title: "Smart Campus",
+      category: "IOT & TECHNOLOGY",
+      description:
+        "Develop technology-based solutions to improve the campus experience.",
+      members: "5 members",
+    },
+
+    {
+      id: "student-marketplace",
+      title: "Student Marketplace",
+      category: "FULL STACK",
+      description:
+        "Create a platform where students can buy, sell, and exchange items.",
+      members: "6 members",
+    },
+  ];
+
   return (
     <div className="dashboard-page">
+
+      {/* SIDEBAR */}
 
       <aside className="dashboard-sidebar">
 
@@ -13,6 +53,7 @@ function Projects() {
           <span className="logo-mark">✦</span>
           CampusFlow
         </div>
+
 
         <nav className="dashboard-nav">
 
@@ -23,12 +64,14 @@ function Projects() {
             ⌂ Dashboard
           </button>
 
+
           <button
             className="dashboard-nav-item"
             onClick={() => navigate("/events")}
           >
             ◈ Events
           </button>
+
 
           <button
             className="dashboard-nav-item"
@@ -37,11 +80,13 @@ function Projects() {
             ♧ Clubs
           </button>
 
+
           <button className="dashboard-nav-item active">
             ▣ Projects
           </button>
 
         </nav>
+
 
         <button
           className="logout-button"
@@ -53,6 +98,8 @@ function Projects() {
       </aside>
 
 
+      {/* MAIN CONTENT */}
+
       <main className="dashboard-main-page">
 
         <header className="dashboard-header">
@@ -60,143 +107,87 @@ function Projects() {
           <div>
 
             <p className="eyebrow">
-              COLLABORATE AND BUILD
+              CAMPUS COLLABORATION
             </p>
 
             <h1>
-              Student Projects
+              Explore Projects
             </h1>
 
           </div>
 
+
+          {/* CREATE PROJECT BUTTON */}
+
+          <button
+            className="create-project-button"
+            onClick={() => navigate("/create-project")}
+          >
+            + Create Project
+          </button>
+
         </header>
 
 
-        <section className="project-grid">
+        {/* PROJECTS */}
 
-          <div className="project-card">
+        <section className="projects-grid">
 
-            <div className="project-top">
-              <span className="project-status">
-                IN PROGRESS
+          {projects.map((project) => (
+
+            <div
+              className="project-card"
+              key={project.id}
+            >
+
+              <span className="event-category">
+                {project.category}
               </span>
 
-              <span>
-                4 MEMBERS
-              </span>
-            </div>
 
-            <h2>
-              CampusFlow
-            </h2>
-
-            <p>
-              A connected platform for students, clubs, events, and
-              opportunities.
-            </p>
-
-            <div className="project-footer">
-              <span>Web Development</span>
-
-              <button className="project-button">
-                View Project →
-              </button>
-            </div>
-
-          </div>
+              <h2>
+                {project.title}
+              </h2>
 
 
-          <div className="project-card">
+              <p>
+                {project.description}
+              </p>
 
-            <div className="project-top">
-              <span className="project-status">
-                OPEN
+
+              <span className="project-members">
+                {project.members}
               </span>
 
-              <span>
-                3 MEMBERS
-              </span>
+
+              {/* BUTTONS */}
+
+              <div className="project-buttons">
+
+                <button
+                  className="view-project-button"
+                  onClick={() =>
+                    navigate(`/projects/${project.id}`)
+                  }
+                >
+                  View Project
+                </button>
+
+
+                <button
+                  className="join-project-button"
+                  onClick={() =>
+                    navigate(`/join-project/${project.id}`)
+                  }
+                >
+                  Join Project →
+                </button>
+
+              </div>
+
             </div>
 
-            <h2>
-              Smart Campus
-            </h2>
-
-            <p>
-              Building technology solutions to improve campus life.
-            </p>
-
-            <div className="project-footer">
-              <span>Innovation</span>
-
-              <button className="project-button">
-                Join Project →
-              </button>
-            </div>
-
-          </div>
-
-
-          <div className="project-card">
-
-            <div className="project-top">
-              <span className="project-status">
-                OPEN
-              </span>
-
-              <span>
-                2 MEMBERS
-              </span>
-            </div>
-
-            <h2>
-              Student Marketplace
-            </h2>
-
-            <p>
-              A platform for students to buy, sell, and exchange items.
-            </p>
-
-            <div className="project-footer">
-              <span>Full Stack</span>
-
-              <button className="project-button">
-                Join Project →
-              </button>
-            </div>
-
-          </div>
-
-
-          <div className="project-card">
-
-            <div className="project-top">
-              <span className="project-status">
-                IN PROGRESS
-              </span>
-
-              <span>
-                5 MEMBERS
-              </span>
-            </div>
-
-            <h2>
-              Mental Health Support
-            </h2>
-
-            <p>
-              Creating a supportive digital space for student wellbeing.
-            </p>
-
-            <div className="project-footer">
-              <span>Social Impact</span>
-
-              <button className="project-button">
-                View Project →
-              </button>
-            </div>
-
-          </div>
+          ))}
 
         </section>
 

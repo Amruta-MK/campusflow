@@ -6,6 +6,7 @@ function Events() {
 
   const events = [
     {
+      id: "tech-symposium",
       date: "24",
       month: "JUL",
       title: "Tech Symposium 2026",
@@ -13,7 +14,9 @@ function Events() {
         "Explore the latest trends in technology and innovation.",
       category: "TECHNOLOGY",
     },
+
     {
+      id: "campus-hackathon",
       date: "28",
       month: "JUL",
       title: "Campus Hackathon",
@@ -21,7 +24,9 @@ function Events() {
         "Build something amazing with your team.",
       category: "HACKATHON",
     },
+
     {
+      id: "design-thinking-workshop",
       date: "02",
       month: "AUG",
       title: "Design Thinking Workshop",
@@ -29,7 +34,9 @@ function Events() {
         "Learn how to solve real-world problems creatively.",
       category: "WORKSHOP",
     },
+
     {
+      id: "coding-club-meetup",
       date: "08",
       month: "AUG",
       title: "Coding Club Meetup",
@@ -53,15 +60,18 @@ function Events() {
           ← Back to Dashboard
         </button>
 
+
         <p className="eyebrow">
           CAMPUSFLOW / EVENTS
         </p>
+
 
         <h1>
           Discover what's
           <br />
           <span>happening.</span>
         </h1>
+
 
         <p className="events-description">
           Find events, workshops, hackathons, and opportunities
@@ -81,7 +91,11 @@ function Events() {
             Upcoming Events
           </h2>
 
-          <button className="primary-button">
+
+          <button
+            className="primary-button"
+            onClick={() => navigate("/create-event")}
+          >
             + Create Event
           </button>
 
@@ -90,11 +104,11 @@ function Events() {
 
         <div className="events-list">
 
-          {events.map((event, index) => (
+          {events.map((event) => (
 
             <div
               className="event-card"
-              key={index}
+              key={event.id}
             >
 
               {/* DATE */}
@@ -120,9 +134,11 @@ function Events() {
                   {event.category}
                 </span>
 
+
                 <h3>
                   {event.title}
                 </h3>
+
 
                 <p>
                   {event.description}
@@ -134,12 +150,12 @@ function Events() {
               {/* VIEW DETAILS */}
 
               <button
-                className="event-arrow"
+                className="event-details-button"
                 onClick={() =>
-                  navigate("/events/tech-symposium")
+                  navigate(`/events/${event.id}`)
                 }
               >
-                →
+                View Details →
               </button>
 
             </div>

@@ -7,12 +7,15 @@ function Clubs() {
   return (
     <div className="dashboard-page">
 
+      {/* SIDEBAR */}
+
       <aside className="dashboard-sidebar">
 
         <div className="logo">
           <span className="logo-mark">✦</span>
           CampusFlow
         </div>
+
 
         <nav className="dashboard-nav">
 
@@ -23,6 +26,7 @@ function Clubs() {
             ⌂ Dashboard
           </button>
 
+
           <button
             className="dashboard-nav-item"
             onClick={() => navigate("/events")}
@@ -30,9 +34,13 @@ function Clubs() {
             ◈ Events
           </button>
 
-          <button className="dashboard-nav-item active">
+
+          <button
+            className="dashboard-nav-item active"
+          >
             ♧ Clubs
           </button>
+
 
           <button
             className="dashboard-nav-item"
@@ -43,6 +51,7 @@ function Clubs() {
 
         </nav>
 
+
         <button
           className="logout-button"
           onClick={() => navigate("/")}
@@ -52,6 +61,8 @@ function Clubs() {
 
       </aside>
 
+
+      {/* MAIN CONTENT */}
 
       <main className="dashboard-main-page">
 
@@ -72,7 +83,12 @@ function Clubs() {
         </header>
 
 
+        {/* CLUBS */}
+
         <section className="club-grid">
+
+
+          {/* WEB DEVELOPMENT CLUB */}
 
           <div className="club-card">
 
@@ -88,12 +104,17 @@ function Clubs() {
               Learn, build, and collaborate on exciting web projects.
             </p>
 
-            <button className="join-button">
+            <button
+              className="join-button"
+              onClick={() => navigate("/join-club")}
+            >
               Join Club →
             </button>
 
           </div>
 
+
+          {/* AI & ML CLUB */}
 
           <div className="club-card">
 
@@ -109,12 +130,17 @@ function Clubs() {
               Explore artificial intelligence and machine learning.
             </p>
 
-            <button className="join-button">
+            <button
+              className="join-button"
+              onClick={() => navigate("/join-club")}
+            >
               Join Club →
             </button>
 
           </div>
 
+
+          {/* ROBOTICS CLUB */}
 
           <div className="club-card">
 
@@ -130,12 +156,17 @@ function Clubs() {
               Design, build, and experiment with robotics technology.
             </p>
 
-            <button className="join-button">
+            <button
+              className="join-button"
+              onClick={() => navigate("/join-club")}
+            >
               Join Club →
             </button>
 
           </div>
 
+
+          {/* PHOTOGRAPHY CLUB */}
 
           <div className="club-card">
 
@@ -151,11 +182,15 @@ function Clubs() {
               Capture moments and share your creativity with others.
             </p>
 
-            <button className="join-button">
+            <button
+              className="join-button"
+              onClick={() => navigate("/join-club")}
+            >
               Join Club →
             </button>
 
           </div>
+
 
         </section>
 

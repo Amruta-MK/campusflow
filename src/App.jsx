@@ -14,6 +14,11 @@ import "./App.css";
 import Clubs from "./clubs";
 import EventDetails from "./EventDetails";
 import Projects from "./projects";
+import ProjectDetails from "./ProjectDetails";
+import JoinClub from "./JoinClub";
+import JoinProject from "./JoinProject";
+import ManageProject from "./ManageProject";
+import CreateProject from "./CreateProject";
 function Home() {
   const navigate = useNavigate();
 
@@ -466,8 +471,38 @@ function App() {
 />
 
 <Route
-  path="/events/tech-symposium"
+  path="/projects/:projectId"
+  element={<ProjectDetails />}
+/>
+
+<Route
+  path="/join-project/:projectId"
+  element={<JoinProject />}
+/>
+
+<Route
+  path="/events/:eventId"
   element={<EventDetails />}
+/>
+
+<Route
+  path="/join-club"
+  element={<JoinClub />}
+/>
+
+<Route
+  path="/join-project/:projectId"
+  element={<JoinProject />}
+/>
+
+<Route
+  path="/manage-project/:projectId"
+  element={<ManageProject />}
+/>
+
+<Route
+  path="/create-project"
+  element={<CreateProject />}
 />
 </Routes>
 
