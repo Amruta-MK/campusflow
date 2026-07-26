@@ -18,13 +18,31 @@ function Signup() {
     });
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+ const handleSubmit = async (event) => {
+  event.preventDefault();
 
-    alert(`Welcome to CampusFlow, ${formData.name}!`);
+  try {
+    const response = await fetch("http://localhost:5000/api/auth/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
 
-    navigate("/dashboard");
-  };
+    const data = await response.json();
+
+    if (response.ok) {
+      alert(data.message);
+      navigate("/dashboard");
+    } else {
+      alert("Signup failed");
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    alert("Cannot connect to the server");
+  }
+};
 
   return (
     <div className="signup-page">
