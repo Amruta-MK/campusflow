@@ -29,13 +29,36 @@ function Login() {
   };
 
 
-  const handleSubmit = (event) => {
+const handleSubmit = async (event) => {
   event.preventDefault();
 
-  if (formData.email === "admin@campusflow.com") {
-    navigate("/admin-dashboard");
-  } else {
-    navigate("/dashboard");
+  try {
+    const response = await fetch("http://localhost:5000/api/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      alert(data.message);
+
+      if (data.user.email === "admin@campusflow.com") {
+        navigate("/admin-dashboard");
+      } else {
+        navigate("/dashboard");
+      }
+
+    } else {
+      alert(data.message);
+    }
+
+  } catch (error) {
+    console.error(error);
+    alert("Cannot connect to server");
   }
 };
 
