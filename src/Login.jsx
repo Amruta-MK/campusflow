@@ -27,8 +27,6 @@ function Login() {
     });
 
   };
-
-
 const handleSubmit = async (event) => {
   event.preventDefault();
 
@@ -44,6 +42,13 @@ const handleSubmit = async (event) => {
     const data = await response.json();
 
     if (response.ok) {
+
+      // Save JWT token
+      localStorage.setItem("token", data.token);
+
+      // Save user details (optional)
+      localStorage.setItem("user", JSON.stringify(data.user));
+
       alert(data.message);
 
       if (data.user.email === "admin@campusflow.com") {
