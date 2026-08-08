@@ -1,9 +1,8 @@
 const express = require("express");
 const router = express.Router();
-
+const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
 router.post("/signup", async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -61,16 +60,18 @@ if (!isMatch) {
   });
 }
 
+
 const token = jwt.sign(
-    {
-        id: user._id,
-        email: user.email,
-    },
-    process.env.JWT_SECRET,
-    {
-        expiresIn: "1d",
-    }
+  {
+    id: user._id,
+    email: user.email,
+  },
+  process.env.JWT_SECRET,
+  {
+    expiresIn: "1d",
+  }
 );
+
 
  res.status(200).json({
     message: "Login successful!",

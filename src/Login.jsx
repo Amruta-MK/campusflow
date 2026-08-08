@@ -43,30 +43,22 @@ const handleSubmit = async (event) => {
 
     if (response.ok) {
 
-      // Save JWT token
+      // Store JWT
       localStorage.setItem("token", data.token);
-
-      // Save user details (optional)
-      localStorage.setItem("user", JSON.stringify(data.user));
 
       alert(data.message);
 
-      if (data.user.email === "admin@campusflow.com") {
-        navigate("/admin-dashboard");
-      } else {
-        navigate("/dashboard");
-      }
+      navigate("/dashboard");
 
     } else {
       alert(data.message);
     }
 
   } catch (error) {
-    console.error(error);
+    console.log(error);
     alert("Cannot connect to server");
   }
 };
-
   return (
 
     <div className="signup-page">

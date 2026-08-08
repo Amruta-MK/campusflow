@@ -4,27 +4,49 @@ import "./App.css";
 function CreateProject() {
   const navigate = useNavigate();
 
-  function handleSubmit(event) {
-    event.preventDefault();
+async function handleSubmit(event) {
+  event.preventDefault();
 
-    const formData = new FormData(event.target);
+  const formData = new FormData(event.target);
 
-    const project = {
-      title: formData.get("title"),
-      category: formData.get("category"),
-      description: formData.get("description"),
-      goal: formData.get("goal"),
-      technologies: formData.get("technologies"),
-      teamSize: formData.get("teamSize"),
-    };
+  const project = {
+    title: formData.get("title"),
+    category: formData.get("category"),
+    description: formData.get("description"),
+    goal: formData.get("goal"),
+    technologies: formData.get("technologies"),
+    teamSize: formData.get("teamSize"),
+  };
 
-    console.log("New Project:", project);
+  try {
+    const token = localStorage.getItem("token");
 
-    alert("Project created successfully!");
+    const response = await fetch(
+      "http://localhost:5000/api/projects/create",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(project),
+      }
+    );
 
-    navigate("/projects");
+    const data = await response.json();
+
+    if (response.ok) {
+      alert(data.message);
+      navigate("/projects");
+    } else {
+      alert(data.message);
+    }
+
+  } catch (error) {
+    console.error(error);
+    alert("Server Error");
   }
-
+}
   return (
     <div className="create-project-page">
 

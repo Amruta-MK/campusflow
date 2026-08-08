@@ -1,46 +1,34 @@
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import "./App.css";
 
 function Projects() {
   const navigate = useNavigate();
 
-  const projects = [
-    {
-      id: "campus-connect",
-      title: "Campus Connect",
-      category: "WEB DEVELOPMENT",
-      description:
-        "Build a platform that helps students connect, collaborate, and discover opportunities.",
-      members: "4 members",
-    },
+  const [projects, setProjects] = useState([]);
 
-    {
-      id: "ai-health-assistant",
-      title: "AI Health Assistant",
-      category: "ARTIFICIAL INTELLIGENCE",
-      description:
-        "Create an intelligent assistant that helps users understand their health information.",
-      members: "3 members",
-    },
+  // Get projects from backend
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:5000/api/projects"
+        );
 
-    {
-      id: "smart-campus",
-      title: "Smart Campus",
-      category: "IOT & TECHNOLOGY",
-      description:
-        "Develop technology-based solutions to improve the campus experience.",
-      members: "5 members",
-    },
+        const data = await response.json();
 
-    {
-      id: "student-marketplace",
-      title: "Student Marketplace",
-      category: "FULL STACK",
-      description:
-        "Create a platform where students can buy, sell, and exchange items.",
-      members: "6 members",
-    },
-  ];
+        if (response.ok) {
+          setProjects(data);
+        } else {
+          console.log(data.message);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchProjects();
+  }, []);
 
   return (
     <div className="dashboard-page">
@@ -54,7 +42,6 @@ function Projects() {
           CampusFlow
         </div>
 
-
         <nav className="dashboard-nav">
 
           <button
@@ -64,14 +51,12 @@ function Projects() {
             ⌂ Dashboard
           </button>
 
-
           <button
             className="dashboard-nav-item"
             onClick={() => navigate("/events")}
           >
             ◈ Events
           </button>
-
 
           <button
             className="dashboard-nav-item"
@@ -80,13 +65,11 @@ function Projects() {
             ♧ Clubs
           </button>
 
-
           <button className="dashboard-nav-item active">
             ▣ Projects
           </button>
 
         </nav>
-
 
         <button
           className="logout-button"
@@ -137,7 +120,7 @@ function Projects() {
 
             <div
               className="project-card"
-              key={project.id}
+              key={project._id}
             >
 
               <span className="event-category">
@@ -156,7 +139,7 @@ function Projects() {
 
 
               <span className="project-members">
-                {project.members}
+                {project.teamSize} members
               </span>
 
 
@@ -167,7 +150,7 @@ function Projects() {
                 <button
                   className="view-project-button"
                   onClick={() =>
-                    navigate(`/projects/${project.id}`)
+                    navigate(`/projects/${project._id}`)
                   }
                 >
                   View Project
@@ -177,7 +160,7 @@ function Projects() {
                 <button
                   className="join-project-button"
                   onClick={() =>
-                    navigate(`/join-project/${project.id}`)
+                    navigate(`/join-project/${project._id}`)
                   }
                 >
                   Join Project →
