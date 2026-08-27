@@ -7,15 +7,10 @@ import {
 import Login from "./Login";
 import Dashboard from "./dashboard";
 import Signup from "./signup";
-import Events from "./events";
 import GetStarted from "./GetStarted";
 import AdminDashboard from "./AdminDashboard";
-import "./App.css";
-import Clubs from "./clubs";
-import EventDetails from "./EventDetails";
 import Projects from "./projects";
 import ProjectDetails from "./ProjectDetails";
-import JoinClub from "./JoinClub";
 import JoinProject from "./JoinProject";
 import ManageProject from "./ManageProject";
 import CreateProject from "./CreateProject";
@@ -455,15 +450,7 @@ function App() {
     element={<AdminDashboard />}
   />
 
-  <Route
-  path="/events"
-  element={<Events />}
-/>
-
-<Route
-  path="/clubs"
-  element={<Clubs />}
-/>
+ 
 
 <Route
   path="/projects"
@@ -480,20 +467,8 @@ function App() {
   element={<JoinProject />}
 />
 
-<Route
-  path="/events/:eventId"
-  element={<EventDetails />}
-/>
 
-<Route
-  path="/join-club"
-  element={<JoinClub />}
-/>
 
-<Route
-  path="/join-project/:projectId"
-  element={<JoinProject />}
-/>
 
 <Route
   path="/manage-project/:projectId"

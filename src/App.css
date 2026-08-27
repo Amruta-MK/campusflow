@@ -2804,3 +2804,30 @@ h1 span {
   }
 
 }
+.project-join-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 30px;
+}
+
+.project-join-form input,
+.project-join-form textarea {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-size: 15px;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.project-join-form textarea {
+  resize: vertical;
+}
+
+.project-join-form input:focus,
+.project-join-form textarea:focus {
+  outline: none;
+  border-color: #111;
+}

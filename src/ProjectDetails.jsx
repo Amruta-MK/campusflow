@@ -1,114 +1,70 @@
 import { useNavigate, useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
 import "./App.css";
 
 function ProjectDetails() {
   const navigate = useNavigate();
   const { projectId } = useParams();
 
-  const projects = {
-    "campus-connect": {
-      title: "Campus Connect",
-      category: "WEB DEVELOPMENT",
-      description:
-        "Campus Connect is a platform designed to help students discover events, clubs, projects, and opportunities available on campus.",
+  const [project, setProject] = useState(null);
 
-      goal:
-        "Create a connected digital campus experience where students can easily find opportunities and collaborate with others.",
+  useEffect(() => {
+    const fetchProject = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:5000/api/projects/${projectId}`
+        );
 
-      technologies: "React · Node.js · MongoDB",
+        const data = await response.json();
 
-      leader: "Amruta",
+        if (response.ok) {
+          setProject(data);
+        } else {
+          console.log(data.message);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
-      members: [
-        "Amruta",
-        "Rahul",
-        "Sneha",
-      ],
-    },
+    fetchProject();
+  }, [projectId]);
 
-    "ai-health-assistant": {
-      title: "AI Health Assistant",
-      category: "ARTIFICIAL INTELLIGENCE",
-
-      description:
-        "An intelligent assistant that helps users understand health-related information using artificial intelligence.",
-
-      goal:
-        "Build an accessible AI-powered assistant that provides useful and understandable information to users.",
-
-      technologies: "Python · Machine Learning · React",
-
-      leader: "Priya",
-
-      members: [
-        "Priya",
-        "Arjun",
-      ],
-    },
-
-    "smart-campus": {
-      title: "Smart Campus",
-      category: "IOT & TECHNOLOGY",
-
-      description:
-        "A technology-based project focused on improving campus facilities and student experiences.",
-
-      goal:
-        "Use technology to create smarter and more efficient campus solutions.",
-
-      technologies: "IoT · Python · Cloud",
-
-      leader: "Kiran",
-
-      members: [
-        "Kiran",
-        "Ananya",
-        "Rohit",
-      ],
-    },
-
-    "student-marketplace": {
-      title: "Student Marketplace",
-      category: "FULL STACK",
-
-      description:
-        "A platform where students can buy, sell, and exchange items within their campus community.",
-
-      goal:
-        "Create a safe and convenient marketplace exclusively for students.",
-
-      technologies: "React · Express · MongoDB",
-
-      leader: "Vikram",
-
-      members: [
-        "Vikram",
-        "Megha",
-        "Aman",
-      ],
-    },
-  };
-
-  const project = projects[projectId];
 
   if (!project) {
     return (
       <div className="project-details-page">
-
-        <h1>
-          Project not found
-        </h1>
-
-        <button
-          className="primary-button"
-          onClick={() => navigate("/projects")}
-        >
-          ← Back to Projects
-        </button>
-
+        <h1>Loading project...</h1>
       </div>
     );
   }
+
+
+  // Get logged-in user's ID from JWT
+  const token = localStorage.getItem("token");
+
+  let currentUserId = null;
+
+  if (token) {
+    try {
+      const payload = JSON.parse(
+        atob(token.split(".")[1])
+      );
+
+      currentUserId = payload.id;
+
+    } catch (error) {
+      console.error("Invalid token");
+    }
+  }
+
+
+  // Check whether current user created this project
+  const isLeader =
+    currentUserId &&
+    project.leader &&
+    currentUserId === project.leader._id;
+
 
   return (
     <div className="project-details-page">
@@ -141,104 +97,147 @@ function ProjectDetails() {
         <div className="project-details-grid">
 
           <div className="project-detail-box">
-
-            <span>
-              PROJECT GOAL
-            </span>
+            <span>PROJECT GOAL</span>
 
             <p>
               {project.goal}
             </p>
-
           </div>
 
 
           <div className="project-detail-box">
-
-            <span>
-              TECHNOLOGIES
-            </span>
+            <span>TECHNOLOGIES</span>
 
             <p>
               {project.technologies}
             </p>
-
           </div>
 
 
           <div className="project-detail-box">
-
-            <span>
-              PROJECT LEADER
-            </span>
+            <span>TEAM SIZE</span>
 
             <p>
-              {project.leader}
+              {project.teamSize} members
             </p>
-
           </div>
 
         </div>
 
+
+        {/* LEADER */}
 
         <div className="project-members-section">
 
           <h2>
-            Project Members
+            Project Leader
           </h2>
 
+          <div className="project-member">
 
-          <div className="project-members-list">
+            <div className="member-avatar">
+              {project.leader?.name?.charAt(0)}
+            </div>
 
-            {project.members.map((member, index) => (
+            <div>
 
-              <div
-                className="project-member"
-                key={index}
-              >
+              <strong>
+                {project.leader?.name}
+              </strong>
 
-                <div className="member-avatar">
-                  {member.charAt(0)}
-                </div>
+              <span>
+                👑 Project Leader
+              </span>
 
-                <div>
-                  <strong>
-                    {member}
-                  </strong>
-
-                  {member === project.leader && (
-                    <span>
-                      Project Leader
-                    </span>
-                  )}
-                </div>
-
-              </div>
-
-            ))}
+            </div>
 
           </div>
 
         </div>
 
 
-        <button
-          className="join-project-button project-details-join"
-          onClick={() =>
-            navigate(`/join-project/${projectId}`)
-          }
-        >
-          Request to Join Project →
-        </button>
+        {/* MEMBERS */}
 
-        <button
-  className="manage-project-button"
-  onClick={() =>
-    navigate(`/manage-project/${projectId}`)
-  }
->
-  Manage Project →
-</button>
+        <div className="project-members-section">
+
+          <h2>
+            Members
+          </h2>
+
+
+          {project.members?.length === 0 ? (
+
+            <p>
+              No members yet.
+            </p>
+
+          ) : (
+
+            project.members.map((member) => (
+
+              <div
+                className="project-member"
+                key={member._id}
+              >
+
+                <div className="member-avatar">
+                  {member.name?.charAt(0)}
+                </div>
+
+                <div>
+
+                  <strong>
+                    {member.name}
+                  </strong>
+
+                  <span>
+                    👤 Project Member
+                  </span>
+
+                </div>
+
+              </div>
+
+            ))
+          )}
+
+        </div>
+
+
+        {/* =================================================
+            LEADER BUTTON
+            ================================================= */}
+
+        {isLeader && (
+
+          <button
+            className="manage-project-button"
+            onClick={() =>
+              navigate(`/manage-project/${projectId}`)
+            }
+          >
+            Manage Project →
+          </button>
+
+        )}
+
+
+        {/* =================================================
+            OTHER USER BUTTON
+            ================================================= */}
+
+        {!isLeader && (
+
+          <button
+            className="join-project-button project-details-join"
+            onClick={() =>
+              navigate(`/join-project/${projectId}`)
+            }
+          >
+            Request to Join Project →
+          </button>
+
+        )}
 
       </main>
 

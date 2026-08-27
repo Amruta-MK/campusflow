@@ -1,27 +1,115 @@
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import "./App.css";
 
 function Dashboard() {
+
   const navigate = useNavigate();
 
+  const [projects, setProjects] = useState([]);
+  const [userName, setUserName] = useState("Student");
+
+
+  useEffect(() => {
+
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+
+
+    // Get user name from JWT
+
+    try {
+
+      const payload = JSON.parse(
+        atob(token.split(".")[1])
+      );
+
+      if (payload.name) {
+        setUserName(payload.name);
+      }
+
+    } catch (error) {
+
+      console.error("Invalid token");
+
+    }
+
+
+    // Get MY projects
+
+    const fetchMyProjects = async () => {
+
+      try {
+
+        const response = await fetch(
+          "http://localhost:5000/api/projects/my-projects",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+
+        const data = await response.json();
+
+
+        if (response.ok) {
+
+          setProjects(data);
+
+        } else {
+
+          console.log(data.message);
+
+        }
+
+      } catch (error) {
+
+        console.error(error);
+
+      }
+
+    };
+
+
+    fetchMyProjects();
+
+  }, [navigate]);
+
+
   return (
+
     <div className="dashboard-page">
+
 
       {/* SIDEBAR */}
 
       <aside className="dashboard-sidebar">
 
         <div className="logo">
-          <span className="logo-mark">✦</span>
+
+          <span className="logo-mark">
+            ✦
+          </span>
+
           CampusFlow
+
         </div>
 
 
         <nav className="dashboard-nav">
 
+
           <button
             className="dashboard-nav-item active"
-            onClick={() => navigate("/dashboard")}
+            onClick={() =>
+              navigate("/dashboard")
+            }
           >
             ⌂ Dashboard
           </button>
@@ -29,299 +117,180 @@ function Dashboard() {
 
           <button
             className="dashboard-nav-item"
-            onClick={() => navigate("/events")}
-          >
-            ◈ Events
-          </button>
-
-
-          <button
-            className="dashboard-nav-item"
-            onClick={() => navigate("/clubs")}
-          >
-            ♧ Clubs
-          </button>
-
-
-          <button
-            className="dashboard-nav-item"
-            onClick={() => navigate("/projects")}
+            onClick={() =>
+              navigate("/projects")
+            }
           >
             ▣ Projects
           </button>
+
+
+          <button
+            className="dashboard-nav-item"
+            onClick={() =>
+              navigate("/profile")
+            }
+          >
+            ◉ Profile
+          </button>
+
 
         </nav>
 
 
         <button
           className="logout-button"
-          onClick={() => navigate("/")}
+          onClick={() => {
+
+            localStorage.removeItem("token");
+
+            navigate("/");
+
+          }}
         >
           ← Log out
         </button>
 
+
       </aside>
 
 
-      {/* MAIN DASHBOARD */}
+      {/* MAIN */}
 
       <main className="dashboard-main-page">
+
 
         <header className="dashboard-header">
 
           <div>
 
             <p className="eyebrow">
-              YOUR CAMPUS, CONNECTED
+              PROJECT COLLABORATION PLATFORM
             </p>
 
+
             <h1>
-              Good morning, Student.
+              Welcome, {userName}.
             </h1>
 
           </div>
 
 
-          <div className="profile-circle">
-            S
-          </div>
-
         </header>
 
 
-        {/* STATS */}
+        {/* QUICK ACTIONS */}
 
-        <section className="dashboard-stats">
+       <div className="dashboard-create-section">
 
-          <div className="stat-card">
+  <button
+    className="create-project-button"
+    onClick={() => navigate("/create-project")}
+  >
+    + Create Project
+  </button>
 
-            <span>
-              UPCOMING EVENTS
-            </span>
-
-            <strong>
-              12
-            </strong>
-
-            <p>
-              +3 this week
-            </p>
-
-          </div>
+</div>
 
 
-          <div className="stat-card">
+        {/* MY PROJECTS */}
 
-            <span>
-              ACTIVE PROJECTS
-            </span>
+        <section className="my-projects-section">
 
-            <strong>
-              08
-            </strong>
 
-            <p>
-              2 need your attention
-            </p>
+          <div className="panel-heading">
+
+            <h2>
+              My Projects
+            </h2>
 
           </div>
 
 
-          <div className="stat-card">
+          {projects.length === 0 ? (
 
-            <span>
-              CLUBS JOINED
-            </span>
+            <div className="empty-projects">
 
-            <strong>
-              05
-            </strong>
-
-            <p>
-              Explore more clubs
-            </p>
-
-          </div>
-
-        </section>
-
-
-        {/* MAIN PANELS */}
-
-        <section className="dashboard-grid-section">
-
-
-          {/* EVENTS PANEL */}
-
-          <div className="events-panel">
-
-            <div className="panel-heading">
-
-              <h2>
-                Upcoming Events
-              </h2>
+              <p>
+                You haven't created any projects yet.
+              </p>
 
 
               <button
-                onClick={() => navigate("/events")}
+                className="create-project-button"
+                onClick={() =>
+                  navigate("/create-project")
+                }
               >
-                View all →
+                + Create Your First Project
               </button>
 
             </div>
 
+          ) : (
 
-            <div className="event-item">
-
-              <div className="event-date">
-
-                <strong>
-                  24
-                </strong>
-
-                <span>
-                  JUL
-                </span>
-
-              </div>
+            <div className="dashboard-project-list">
 
 
-              <div>
+              {projects.map((project) => (
 
-                <h3>
-                  Tech Symposium 2026
-                </h3>
+                <div
+                  className="dashboard-project-card"
+                  key={project._id}
+                >
 
-                <p>
-                  10:00 AM · Main Auditorium
-                </p>
+                  <div>
 
-              </div>
+                    <span className="event-category">
+                      {project.category}
+                    </span>
+
+
+                    <h3>
+                      {project.title}
+                    </h3>
+
+
+                    <p>
+                      {project.description}
+                    </p>
+
+                  </div>
+
+
+                  {/* ONLY MANAGE */}
+
+                  <button
+                    className="manage-project-button"
+                    onClick={() =>
+                      navigate(
+                        `/manage-project/${project._id}`
+                      )
+                    }
+                  >
+                    Manage Project →
+                  </button>
+
+
+                </div>
+
+              ))}
+
 
             </div>
 
+          )}
 
-            <div className="event-item">
-
-              <div className="event-date">
-
-                <strong>
-                  27
-                </strong>
-
-                <span>
-                  JUL
-                </span>
-
-              </div>
-
-
-              <div>
-
-                <h3>
-                  Hackathon Team Meet
-                </h3>
-
-                <p>
-                  2:00 PM · Innovation Lab
-                </p>
-
-              </div>
-
-            </div>
-
-
-            <div className="event-item">
-
-              <div className="event-date">
-
-                <strong>
-                  02
-                </strong>
-
-                <span>
-                  AUG
-                </span>
-
-              </div>
-
-
-              <div>
-
-                <h3>
-                  Photography Club Meetup
-                </h3>
-
-                <p>
-                  4:30 PM · Student Center
-                </p>
-
-              </div>
-
-            </div>
-
-          </div>
-
-
-          {/* ACTIVITY PANEL */}
-
-          <div className="activity-panel">
-
-            <div className="panel-heading">
-
-              <h2>
-                Recent Activity
-              </h2>
-
-            </div>
-
-
-            <div className="activity-item">
-
-              <span className="activity-dot"></span>
-
-              <p>
-                You joined{" "}
-                <strong>
-                  Web Development Club
-                </strong>
-              </p>
-
-            </div>
-
-
-            <div className="activity-item">
-
-              <span className="activity-dot"></span>
-
-              <p>
-                New project invitation from{" "}
-                <strong>
-                  Team Alpha
-                </strong>
-              </p>
-
-            </div>
-
-
-            <div className="activity-item">
-
-              <span className="activity-dot"></span>
-
-              <p>
-                New announcement from your department
-              </p>
-
-            </div>
-
-          </div>
 
         </section>
+
 
       </main>
 
     </div>
+
   );
+
 }
 
 export default Dashboard;

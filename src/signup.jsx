@@ -33,9 +33,12 @@ function Signup() {
     const data = await response.json();
 
     if (response.ok) {
-      alert(data.message);
-      navigate("/dashboard");
-    } else {
+  localStorage.removeItem("token");
+
+  alert("Registration successful! Please login.");
+
+  navigate("/login");
+}else {
       alert("Signup failed");
     }
   } catch (error) {
