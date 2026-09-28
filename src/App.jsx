@@ -4,6 +4,7 @@ import {
   Route,
   useNavigate,
 } from "react-router-dom";
+
 import Login from "./Login";
 import Dashboard from "./dashboard";
 import Signup from "./signup";
@@ -14,6 +15,10 @@ import ProjectDetails from "./ProjectDetails";
 import JoinProject from "./JoinProject";
 import ManageProject from "./ManageProject";
 import CreateProject from "./CreateProject";
+import Profile from "./Profile";
+
+import "./App.css";
+
 function Home() {
   const navigate = useNavigate();
 
@@ -21,31 +26,16 @@ function Home() {
     <div className="app">
 
       {/* NAVBAR */}
-
       <nav className="navbar">
-
         <div className="logo">
           <span className="logo-mark">✦</span>
-          CampusFlow
+          Project Collaboration Hub
         </div>
-
 
         <div className="nav-links">
-
-          <a href="#features">
-            Features
-          </a>
-
-          <a href="#how-it-works">
-            How it works
-          </a>
-
-          <a href="#about">
-            About
-          </a>
-
+          <a href="#how-it-works">How it works</a>
+          <a href="#about">About</a>
         </div>
-
 
         <button
           className="nav-button"
@@ -53,149 +43,72 @@ function Home() {
         >
           Get Started →
         </button>
-
       </nav>
 
 
       {/* HERO */}
-
       <main className="hero">
 
         <div className="hero-content">
 
           <p className="eyebrow">
-            THE CAMPUS OPERATING SYSTEM
+            PROJECT COLLABORATION PLATFORM
           </p>
-
 
           <h1>
-            Everything happening
+            Ideas become better
             <br />
-            on your campus.
+            when people
             <br />
-            <span>In one flow.</span>
+            <span>build together.</span>
           </h1>
 
-
           <p className="hero-description">
-            CampusFlow brings students, clubs, events, projects, and
-            opportunities together in one connected platform.
+            A platform where students can discover projects,
+            connect with teammates, and collaborate to turn
+            ideas into reality.
           </p>
 
-
-          
+          <button
+            className="hero-button"
+            onClick={() => navigate("/get-started")}
+          >
+            Get Started →
+          </button>
 
         </div>
 
 
-        {/* DASHBOARD PREVIEW */}
-
+        {/* CREATIVE VISUAL */}
         <div className="hero-visual">
 
-          <div className="visual-card">
+          <div className="collaboration-visual">
 
-            <div className="card-header">
-
-              <span>
-                campusflow / dashboard
-              </span>
-
-              <span className="status">
-                ● LIVE
-              </span>
-
+            <div className="visual-circle circle-one">
+              ✦
             </div>
 
-
-            <div className="dashboard-content">
-
-              <div className="dashboard-sidebar">
-
-                <div className="side-icon active">
-                  ⌂
-                </div>
-
-                <div className="side-icon">
-                  ◈
-                </div>
-
-                <div className="side-icon">
-                  ♧
-                </div>
-
-                <div className="side-icon">
-                  ▣
-                </div>
-
-              </div>
-
-
-              <div className="dashboard-main">
-
-                <p className="small-label">
-                  YOUR CAMPUS, CONNECTED
-                </p>
-
-
-                <h2>
-                  Good morning, student.
-                </h2>
-
-
-                <div className="dashboard-grid">
-
-                  <div className="mini-card">
-
-                    <span>
-                      Upcoming Events
-                    </span>
-
-                    <strong>
-                      12
-                    </strong>
-
-                  </div>
-
-
-                  <div className="mini-card">
-
-                    <span>
-                      Active Projects
-                    </span>
-
-                    <strong>
-                      08
-                    </strong>
-
-                  </div>
-
-                </div>
-
-
-                <div className="activity-card">
-
-                  <span>
-                    RECENT ACTIVITY
-                  </span>
-
-
-                  <p>
-                    New event added to your campus calendar
-                  </p>
-
-
-                  <div className="activity-line"></div>
-
-
-                  <p>
-                    Team invitation received
-                  </p>
-
-                </div>
-
-              </div>
-
+            <div className="visual-circle circle-two">
+              +
             </div>
+
+            <div className="visual-circle circle-three">
+              ◇
+            </div>
+
+            <div className="visual-circle circle-four">
+              ○
+            </div>
+
+            <div className="visual-center">
+              <span>BUILD</span>
+              <strong>TOGETHER</strong>
+            </div>
+
+            <div className="connection-line line-one"></div>
+            <div className="connection-line line-two"></div>
+            <div className="connection-line line-three"></div>
+            <div className="connection-line line-four"></div>
 
           </div>
 
@@ -204,168 +117,44 @@ function Home() {
       </main>
 
 
-      {/* FEATURES */}
-
-      <section
-        id="features"
-        className="info-section"
-      >
-
-        <p className="eyebrow">
-          EVERYTHING IN ONE PLACE
-        </p>
-
-
-        <h2>
-          Your campus,
-          <br />
-          connected.
-        </h2>
-
-
-        <div className="feature-grid">
-
-          <div className="feature-card">
-
-            <span>
-              01
-            </span>
-
-            <h3>
-              Events
-            </h3>
-
-            <p>
-              Discover everything happening around your campus.
-            </p>
-
-          </div>
-
-
-          <div className="feature-card">
-
-            <span>
-              02
-            </span>
-
-            <h3>
-              Clubs
-            </h3>
-
-            <p>
-              Find communities and connect with people who share your interests.
-            </p>
-
-          </div>
-
-
-          <div className="feature-card">
-
-            <span>
-              03
-            </span>
-
-            <h3>
-              Projects
-            </h3>
-
-            <p>
-              Collaborate with students and build something meaningful.
-            </p>
-
-          </div>
-
-
-          <div className="feature-card">
-
-            <span>
-              04
-            </span>
-
-            <h3>
-              Opportunities
-            </h3>
-
-            <p>
-              Never miss an opportunity to learn, grow, and participate.
-            </p>
-
-          </div>
-
-        </div>
-
-      </section>
-
-
       {/* HOW IT WORKS */}
-
-      <section
-        id="how-it-works"
-        className="how-section"
-      >
+      <section id="how-it-works" className="how-section">
 
         <p className="eyebrow">
-          SIMPLE. CONNECTED. CAMPUS-WIDE.
+          HOW IT WORKS
         </p>
 
-
         <h2>
-          Everything flows
+          Simple connection.
           <br />
-          together.
+          Meaningful collaboration.
         </h2>
-
 
         <div className="steps">
 
           <div className="step">
-
-            <strong>
-              01
-            </strong>
-
-            <h3>
-              Create your account
-            </h3>
-
+            <strong>01</strong>
+            <h3>Discover</h3>
             <p>
-              Join CampusFlow using your college email and create your student profile.
+              Find projects and ideas that interest you.
             </p>
-
           </div>
 
-
           <div className="step">
-
-            <strong>
-              02
-            </strong>
-
-            <h3>
-              Discover your campus
-            </h3>
-
+            <strong>02</strong>
+            <h3>Connect</h3>
             <p>
-              Explore events, clubs, projects, and opportunities around you.
+              Connect with students who share your interests
+              and skills.
             </p>
-
           </div>
 
-
           <div className="step">
-
-            <strong>
-              03
-            </strong>
-
-            <h3>
-              Get involved
-            </h3>
-
+            <strong>03</strong>
+            <h3>Collaborate</h3>
             <p>
-              Join communities, participate in events, and collaborate with others.
+              Work together and turn ideas into real projects.
             </p>
-
           </div>
 
         </div>
@@ -374,39 +163,39 @@ function Home() {
 
 
       {/* ABOUT */}
-
-      <section
-        id="about"
-        className="about-section"
-      >
+      <section id="about" className="about-section">
 
         <p className="eyebrow">
-          ABOUT CAMPUSFLOW
+          ABOUT THE PLATFORM
         </p>
 
-
         <h2>
-          One platform.
+          One place to
           <br />
-          Every campus possibility.
+          <span>build together.</span>
         </h2>
 
-
         <p className="about-description">
-          CampusFlow is designed to bring the entire campus community
-          together in one connected space.
+          Project Collaboration Hub brings students together
+          around ideas, skills, and shared goals — making it
+          easier to find the right people and collaborate.
         </p>
 
       </section>
 
 
-      {/* BOTTOM */}
-
+      {/* BOTTOM CTA */}
       <section className="bottom-section">
 
         <p>
-          ONE PLATFORM. EVERY CAMPUS POSSIBILITY.
+          HAVE AN IDEA?
         </p>
+
+        <h2>
+          Build it together.
+        </h2>
+
+        
 
       </section>
 
@@ -414,6 +203,9 @@ function Home() {
   );
 }
 
+/* =========================================================
+   APP ROUTES
+========================================================= */
 
 function App() {
 
@@ -421,70 +213,73 @@ function App() {
 
     <BrowserRouter>
 
-     <Routes>
+      <Routes>
 
-  <Route path="/" element={<Home />} />
+        <Route
+          path="/"
+          element={<Home />}
+        />
 
-  <Route
-    path="/get-started"
-    element={<GetStarted />}
-  />
+        <Route
+          path="/get-started"
+          element={<GetStarted />}
+        />
 
-  <Route
-    path="/login"
-    element={<Login />}
-  />
+        <Route
+          path="/login"
+          element={<Login />}
+        />
 
-  <Route
-    path="/signup"
-    element={<Signup />}
-  />
+        <Route
+          path="/signup"
+          element={<Signup />}
+        />
 
-  <Route
-    path="/dashboard"
-    element={<Dashboard />}
-  />
+        <Route
+          path="/dashboard"
+          element={<Dashboard />}
+        />
 
-  <Route
-    path="/admin-dashboard"
-    element={<AdminDashboard />}
-  />
+        <Route
+          path="/admin-dashboard"
+          element={<AdminDashboard />}
+        />
 
- 
+        <Route
+          path="/profile"
+          element={<Profile />}
+        />
 
-<Route
-  path="/projects"
-  element={<Projects />}
-/>
+        <Route
+          path="/projects"
+          element={<Projects />}
+        />
 
-<Route
-  path="/projects/:projectId"
-  element={<ProjectDetails />}
-/>
+        <Route
+          path="/projects/:projectId"
+          element={<ProjectDetails />}
+        />
 
-<Route
-  path="/join-project/:projectId"
-  element={<JoinProject />}
-/>
+        <Route
+          path="/join-project/:projectId"
+          element={<JoinProject />}
+        />
 
+        <Route
+          path="/manage-project/:projectId"
+          element={<ManageProject />}
+        />
 
+        <Route
+          path="/create-project"
+          element={<CreateProject />}
+        />
 
-
-<Route
-  path="/manage-project/:projectId"
-  element={<ManageProject />}
-/>
-
-<Route
-  path="/create-project"
-  element={<CreateProject />}
-/>
-</Routes>
+      </Routes>
 
     </BrowserRouter>
 
   );
-
 }
 
 

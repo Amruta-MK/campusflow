@@ -1,18 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import "./App.css";
 
-
 function GetStarted() {
-
   const navigate = useNavigate();
 
-
   return (
-
     <div className="get-started-page">
 
       <div className="get-started-card">
-
 
         <div className="logo">
 
@@ -20,25 +15,26 @@ function GetStarted() {
             ✦
           </span>
 
-          CampusFlow
+          Project Collaboration Hub
 
         </div>
 
 
         <p className="eyebrow">
-          WELCOME TO CAMPUSFLOW
+          WELCOME TO PROJECT COLLABORATION HUB
         </p>
 
 
         <h1>
-          Your campus.
+          Find projects.
           <br />
-          <span>Your flow.</span>
+          <span>Build together.</span>
         </h1>
 
 
         <p className="get-started-description">
-          Connect with everything happening around your campus.
+          Discover projects, connect with students, and build your team
+          together.
         </p>
 
 
@@ -54,7 +50,7 @@ function GetStarted() {
               </h2>
 
               <p>
-                Log in and continue your campus journey.
+                Log in and continue building projects with your team.
               </p>
 
             </div>
@@ -75,11 +71,11 @@ function GetStarted() {
             <div>
 
               <h2>
-                New to CampusFlow?
+                New here?
               </h2>
 
               <p>
-                Create your account and join your campus community.
+                Create your account and start collaborating on projects.
               </p>
 
             </div>
@@ -94,6 +90,7 @@ function GetStarted() {
 
           </div>
 
+
         </div>
 
 
@@ -107,10 +104,7 @@ function GetStarted() {
       </div>
 
     </div>
-
   );
-
 }
-
 
 export default GetStarted;

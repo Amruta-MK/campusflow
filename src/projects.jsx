@@ -70,7 +70,7 @@ function Projects() {
 
         <div className="logo">
           <span className="logo-mark">✦</span>
-          CampusFlow
+          Project Collaboration Hub
         </div>
 
 

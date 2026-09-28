@@ -97,7 +97,7 @@ function Dashboard() {
             ✦
           </span>
 
-          CampusFlow
+          Project Collaboration Hub
 
         </div>
 

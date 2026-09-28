@@ -59,7 +59,8 @@ router.post("/create", authMiddleware, async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     const projects = await Project.find()
-      .populate("leader", "name email");
+     .populate("leader", "name email profileImage")
+.populate("members", "name email profileImage");
 
     res.status(200).json(projects);
 
@@ -203,7 +204,7 @@ router.get("/:id/requests", authMiddleware, async (req, res) => {
   try {
 
     const project = await Project.findById(req.params.id)
-      .populate("joinRequests.user", "name email");
+  .populate("joinRequests.user", "name email profileImage");
 
     if (!project) {
       return res.status(404).json({
@@ -403,17 +404,63 @@ router.delete(
 
 
 // =====================================================
+// GET MY JOIN REQUEST STATUS
+// =====================================================
+
+router.get("/:id/my-request", authMiddleware, async (req, res) => {
+  try {
+
+    const project =
+      await Project.findById(req.params.id);
+
+    if (!project) {
+      return res.status(404).json({
+        message: "Project not found",
+      });
+    }
+
+
+    const request =
+      project.joinRequests.find(
+        (request) =>
+          request.user.toString() === req.user.id
+      );
+
+
+    if (!request) {
+      return res.status(404).json({
+        message: "No join request found",
+      });
+    }
+
+
+    res.status(200).json({
+      status: request.status,
+    });
+
+  } catch (error) {
+
+    console.error(error);
+
+    res.status(500).json({
+      message: "Server Error",
+    });
+  }
+});
+
+
+// =====================================================
 // GET ONE PROJECT
 // =====================================================
 
 router.get("/:id", async (req, res) => {
   try {
 
-    const project =
-      await Project.findById(req.params.id)
-        .populate("leader", "name email")
-        .populate("members", "name email")
-        .populate("joinRequests.user", "name email");
+   const project =
+  await Project.findById(req.params.id)
+    .populate("leader", "name email profileImage")
+    .populate("members", "name email profileImage")
+    .populate("joinRequests.user", "name email profileImage");
 
     if (!project) {
       return res.status(404).json({

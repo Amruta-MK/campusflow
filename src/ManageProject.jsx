@@ -8,10 +8,11 @@ function ManageProject() {
 
   const [project, setProject] = useState(null);
   const [requests, setRequests] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   // =====================================================
-  // LOAD PROJECT + JOIN REQUESTS
+  // LOAD PROJECT + CURRENT USER + JOIN REQUESTS
   // =====================================================
 
   useEffect(() => {
@@ -24,7 +25,32 @@ function ManageProject() {
 
     const loadData = async () => {
       try {
-        // Get project
+        // =================================================
+        // GET CURRENT LOGGED-IN USER
+        // =================================================
+
+        const userResponse = await fetch(
+          "http://localhost:5000/api/auth/profile",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const userData = await userResponse.json();
+
+        if (!userResponse.ok) {
+          alert(userData.message);
+          return;
+        }
+
+        setCurrentUser(userData);
+
+        // =================================================
+        // GET PROJECT
+        // =================================================
+
         const projectResponse = await fetch(
           `http://localhost:5000/api/projects/${projectId}`
         );
@@ -38,24 +64,34 @@ function ManageProject() {
 
         setProject(projectData);
 
-        // Get join requests
-        const requestResponse = await fetch(
-          `http://localhost:5000/api/projects/${projectId}/requests`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+        // =================================================
+        // CHECK IF CURRENT USER IS THE LEADER
+        // =================================================
+
+        const isLeader =
+          projectData?.leader?._id?.toString() ===
+          userData?._id?.toString();
+
+        // =================================================
+        // GET JOIN REQUESTS ONLY FOR LEADER
+        // =================================================
+
+        if (isLeader) {
+          const requestResponse = await fetch(
+            `http://localhost:5000/api/projects/${projectId}/requests`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          const requestData = await requestResponse.json();
+
+          if (requestResponse.ok) {
+            setRequests(requestData);
           }
-        );
-
-        const requestData = await requestResponse.json();
-
-        if (!requestResponse.ok) {
-          alert(requestData.message);
-          return;
         }
-
-        setRequests(requestData);
       } catch (error) {
         console.error("Error loading project:", error);
       } finally {
@@ -65,6 +101,14 @@ function ManageProject() {
 
     loadData();
   }, [projectId, navigate]);
+
+  // =====================================================
+  // CHECK WHETHER CURRENT USER IS LEADER
+  // =====================================================
+
+  const isLeader =
+    project?.leader?._id?.toString() ===
+    currentUser?._id?.toString();
 
   // =====================================================
   // APPROVE REQUEST
@@ -92,7 +136,7 @@ function ManageProject() {
         // Remove approved request from pending requests
         setRequests((previousRequests) =>
           previousRequests.filter(
-            (request) => request._id !== requestId
+            (request) => request.user?._id !== requestId
           )
         );
 
@@ -142,7 +186,7 @@ function ManageProject() {
         // Remove rejected request from screen
         setRequests((previousRequests) =>
           previousRequests.filter(
-            (request) => request._id !== requestId
+            (request) => request.user?._id !== requestId
           )
         );
       } else {
@@ -184,7 +228,6 @@ function ManageProject() {
         ← Back to Project
       </button>
 
-
       <main className="project-details-card">
 
         {/* HEADER */}
@@ -198,143 +241,164 @@ function ManageProject() {
         </h1>
 
         <p className="project-details-description">
-          You are the leader of this project.
+          {isLeader
+            ? "You are the leader of this project."
+            : "You are a member of this project."}
         </p>
 
 
         {/* =================================================
             JOIN REQUESTS
+            ONLY LEADER CAN SEE THIS
         ================================================= */}
 
-        <div className="project-members-section">
+        {isLeader && (
+          <div className="project-members-section">
 
-          <h2>
-            Join Requests
-          </h2>
+            <h2>
+              Join Requests
+            </h2>
 
+            {requests.length === 0 ? (
 
-          {requests.length === 0 ? (
+              <p>
+                No pending join requests.
+              </p>
 
-            <p>
-              No pending join requests.
-            </p>
+            ) : (
 
-          ) : (
+              <div className="project-members-list">
 
-            <div className="project-members-list">
+                {requests.map((request) => (
 
-              {requests.map((request) => (
+                  <div
+                    className="project-member"
+                    key={request._id}
+                  >
 
-                <div
-                  className="project-member"
-                  key={request._id}
-                >
+                    {/* AVATAR */}
 
-                  {/* AVATAR */}
+                    <div className="member-avatar">
 
-                  <div className="member-avatar">
-                    {request.name
-                      ? request.name.charAt(0).toUpperCase()
-                      : "U"}
-                  </div>
+                      {request.user?.profileImage ? (
+                        <img
+                          src={request.user.profileImage}
+                          alt={request.user.name}
+                          className="member-avatar-image"
+                        />
+                      ) : (
+                        request.user?.name
+                          ? request.user.name
+                              .charAt(0)
+                              .toUpperCase()
+                          : "U"
+                      )}
 
-
-                  {/* REQUEST DETAILS */}
-
-                  <div style={{ flex: 1 }}>
-
-                    <strong>
-                      {request.name || "Student"}
-                    </strong>
-
-                    <span>
-                      {request.email || "No email provided"}
-                    </span>
-
-
-                    {/* GITHUB */}
-
-                    {request.github && (
-                      <p>
-                        <strong>
-                          GitHub:
-                        </strong>{" "}
-                        {request.github}
-                      </p>
-                    )}
+                    </div>
 
 
-                    {/* LINKEDIN */}
+                    {/* REQUEST DETAILS */}
 
-                    {request.linkedin && (
-                      <p>
-                        <strong>
-                          LinkedIn:
-                        </strong>{" "}
-                        {request.linkedin}
-                      </p>
-                    )}
+                    <div style={{ flex: 1 }}>
+
+                      <strong>
+                        {request.user?.name || "Student"}
+                      </strong>
+
+                      <span>
+                        {request.user?.email ||
+                          "No email provided"}
+                      </span>
 
 
-                    {/* MESSAGE */}
+                      {/* GITHUB */}
 
-                    {request.message && (
-                      <>
+                      {request.github && (
                         <p>
                           <strong>
-                            Why they want to join:
-                          </strong>
+                            GitHub:
+                          </strong>{" "}
+                          {request.github}
                         </p>
+                      )}
 
+
+                      {/* LINKEDIN */}
+
+                      {request.linkedin && (
                         <p>
-                          {request.message}
+                          <strong>
+                            LinkedIn:
+                          </strong>{" "}
+                          {request.linkedin}
                         </p>
-                      </>
-                    )}
+                      )}
 
 
-                    {/* APPROVE / REJECT */}
+                      {/* MESSAGE */}
 
-                    <div
-                      style={{
-                        marginTop: "12px",
-                        display: "flex",
-                        gap: "10px",
-                      }}
-                    >
+                      {request.message && (
+                        <>
+                          <p>
+                            <strong>
+                              Why they want to join:
+                            </strong>
+                          </p>
 
-                      <button
-                        className="join-project-button"
-                        onClick={() =>
-                          approveRequest(request._id)
-                        }
+                          <p>
+                            {request.message}
+                          </p>
+                        </>
+                      )}
+
+
+                      {/* APPROVE / REJECT */}
+
+                      <div
+                        style={{
+                          marginTop: "12px",
+                          display: "flex",
+                          gap: "10px",
+                        }}
                       >
-                        ✓ Approve
-                      </button>
+
+                        <button
+                          className="join-project-button"
+                          onClick={() =>
+                            approveRequest(
+                              request.user._id
+                            )
+                          }
+                        >
+                          ✓ Approve
+                        </button>
 
 
-                      <button
-                        className="back-button"
-                        onClick={() =>
-                          rejectRequest(request._id)
-                        }
-                      >
-                        ✕ Reject
-                      </button>
+                        <button
+                          className="back-button"
+                          onClick={() =>
+                            rejectRequest(
+                              request.user._id
+                            )
+                          }
+                        >
+                          ✕ Reject
+                        </button>
+
+                      </div>
 
                     </div>
 
                   </div>
 
-                </div>
+                ))}
 
-              ))}
+              </div>
 
-            </div>
+            )}
 
-          )}
-
-        </div>
+          </div>
+        )}
 
 
         {/* =================================================
@@ -347,7 +411,6 @@ function ManageProject() {
             Current Members
           </h2>
 
-
           <div className="project-members-list">
 
             {/* PROJECT LEADER */}
@@ -356,14 +419,21 @@ function ManageProject() {
 
               <div className="member-avatar">
 
-                {project?.leader?.name
-                  ? project.leader.name
-                      .charAt(0)
-                      .toUpperCase()
-                  : "L"}
+                {project?.leader?.profileImage ? (
+                  <img
+                    src={project.leader.profileImage}
+                    alt={project.leader.name}
+                    className="member-avatar-image"
+                  />
+                ) : (
+                  project?.leader?.name
+                    ? project.leader.name
+                        .charAt(0)
+                        .toUpperCase()
+                    : "L"
+                )}
 
               </div>
-
 
               <div>
 
@@ -392,14 +462,21 @@ function ManageProject() {
 
                 <div className="member-avatar">
 
-                  {member?.name
-                    ? member.name
-                        .charAt(0)
-                        .toUpperCase()
-                    : "M"}
+                  {member?.profileImage ? (
+                    <img
+                      src={member.profileImage}
+                      alt={member.name}
+                      className="member-avatar-image"
+                    />
+                  ) : (
+                    member?.name
+                      ? member.name
+                          .charAt(0)
+                          .toUpperCase()
+                      : "M"
+                  )}
 
                 </div>
-
 
                 <div>
 

@@ -8,6 +8,13 @@ function ProjectDetails() {
 
   const [project, setProject] = useState(null);
 
+  // =====================================================
+  // JOIN REQUEST STATUS
+  // =====================================================
+
+  const [requestStatus, setRequestStatus] = useState(null);
+
+
   useEffect(() => {
     const fetchProject = async () => {
       try {
@@ -31,6 +38,49 @@ function ProjectDetails() {
   }, [projectId]);
 
 
+  // =====================================================
+  // GET MY JOIN REQUEST STATUS
+  // =====================================================
+
+  useEffect(() => {
+    const fetchRequestStatus = async () => {
+
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        return;
+      }
+
+      try {
+
+        const response = await fetch(
+          `http://localhost:5000/api/projects/${projectId}/my-request`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const data = await response.json();
+
+        if (response.ok) {
+          setRequestStatus(data.status);
+        } else {
+          // No request yet
+          setRequestStatus(null);
+        }
+
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchRequestStatus();
+
+  }, [projectId]);
+
+
   if (!project) {
     return (
       <div className="project-details-page">
@@ -40,7 +90,10 @@ function ProjectDetails() {
   }
 
 
-  // Get logged-in user's ID from JWT
+  // =====================================================
+  // GET LOGGED-IN USER ID
+  // =====================================================
+
   const token = localStorage.getItem("token");
 
   let currentUserId = null;
@@ -59,7 +112,10 @@ function ProjectDetails() {
   }
 
 
-  // Check whether current user created this project
+  // =====================================================
+  // CHECK LEADER
+  // =====================================================
+
   const isLeader =
     currentUserId &&
     project.leader &&
@@ -135,10 +191,17 @@ function ProjectDetails() {
 
           <div className="project-member">
 
-            <div className="member-avatar">
-              {project.leader?.name?.charAt(0)}
-            </div>
-
+           <div className="member-avatar">
+  {project.leader?.profileImage ? (
+    <img
+      src={project.leader.profileImage}
+      alt={project.leader.name}
+      className="member-avatar-image"
+    />
+  ) : (
+    project.leader?.name?.charAt(0)
+  )}
+</div>
             <div>
 
               <strong>
@@ -180,9 +243,17 @@ function ProjectDetails() {
                 key={member._id}
               >
 
-                <div className="member-avatar">
-                  {member.name?.charAt(0)}
-                </div>
+               <div className="member-avatar">
+  {member.profileImage ? (
+    <img
+      src={member.profileImage}
+      alt={member.name}
+      className="member-avatar-image"
+    />
+  ) : (
+    member.name?.charAt(0)
+  )}
+</div>
 
                 <div>
 
@@ -228,14 +299,66 @@ function ProjectDetails() {
 
         {!isLeader && (
 
-          <button
-            className="join-project-button project-details-join"
-            onClick={() =>
-              navigate(`/join-project/${projectId}`)
-            }
-          >
-            Request to Join Project →
-          </button>
+          <>
+
+            {/* NO REQUEST */}
+
+            {!requestStatus && (
+
+              <button
+                className="join-project-button project-details-join"
+                onClick={() =>
+                  navigate(`/join-project/${projectId}`)
+                }
+              >
+                Request to Join Project →
+              </button>
+
+            )}
+
+
+            {/* PENDING */}
+
+            {requestStatus === "pending" && (
+
+              <button
+                className="join-project-button project-details-join"
+                disabled
+              >
+                🟡 Request Pending
+              </button>
+
+            )}
+
+
+            {/* APPROVED */}
+
+            {requestStatus === "approved" && (
+
+              <button
+                className="join-project-button project-details-join"
+                disabled
+              >
+                🟢 You are a Member
+              </button>
+
+            )}
+
+
+            {/* REJECTED */}
+
+            {requestStatus === "rejected" && (
+
+              <button
+                className="join-project-button project-details-join"
+                disabled
+              >
+                🔴 Request Rejected
+              </button>
+
+            )}
+
+          </>
 
         )}
 

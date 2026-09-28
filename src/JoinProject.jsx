@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 
 function JoinProject() {
@@ -7,12 +7,55 @@ function JoinProject() {
   const navigate = useNavigate();
   const { projectId } = useParams();
 
+  const [userName, setUserName] = useState("");
+  const [userEmail, setUserEmail] = useState("");
+
   const [linkedin, setLinkedin] = useState("");
   const [github, setGithub] = useState("");
   const [message, setMessage] = useState("");
 
   const [loading, setLoading] = useState(false);
 
+
+  // ==========================================
+  // GET LOGGED-IN USER DETAILS
+  // ==========================================
+
+  useEffect(() => {
+
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+
+    try {
+
+      const payload = JSON.parse(
+        atob(token.split(".")[1])
+      );
+
+      if (payload.name) {
+        setUserName(payload.name);
+      }
+
+      if (payload.email) {
+        setUserEmail(payload.email);
+      }
+
+    } catch (error) {
+
+      console.error("Invalid token");
+
+    }
+
+  }, [navigate]);
+
+
+  // ==========================================
+  // SUBMIT JOIN REQUEST
+  // ==========================================
 
   const handleSubmit = async (e) => {
 
@@ -26,8 +69,14 @@ function JoinProject() {
     }
 
 
+    // Check required links
+
     if (!linkedin.trim() || !github.trim()) {
-      alert("Please provide your LinkedIn and GitHub links.");
+
+      alert(
+        "Please provide your LinkedIn and GitHub links."
+      );
+
       return;
     }
 
@@ -48,9 +97,11 @@ function JoinProject() {
           },
 
           body: JSON.stringify({
+
             linkedin,
             github,
             message,
+
           }),
         }
       );
@@ -61,9 +112,13 @@ function JoinProject() {
 
       if (response.ok) {
 
-        alert("Join request sent successfully!");
+        alert(
+          "Join request sent successfully!"
+        );
 
-        navigate(`/projects/${projectId}`);
+        navigate(
+          `/projects/${projectId}`
+        );
 
       } else {
 
@@ -75,17 +130,29 @@ function JoinProject() {
 
       console.error(error);
 
-      alert("Cannot connect to server");
+      alert(
+        "Cannot connect to server"
+      );
 
     } finally {
 
       setLoading(false);
+
     }
+
   };
 
 
+  // ==========================================
+  // PAGE
+  // ==========================================
+
   return (
+
     <div className="project-details-page">
+
+
+      {/* BACK BUTTON */}
 
       <button
         className="back-button"
@@ -98,6 +165,7 @@ function JoinProject() {
 
 
       <main className="project-details-card">
+
 
         <p className="eyebrow">
           JOIN PROJECT
@@ -115,27 +183,45 @@ function JoinProject() {
         </p>
 
 
+        {/* ======================================
+            JOIN FORM
+            ====================================== */}
+
         <form
           onSubmit={handleSubmit}
           className="join-project-form"
         >
 
-          {/* LINKEDIN */}
+
+          {/* FULL NAME */}
 
           <div className="form-group">
 
             <label>
-              LinkedIn Profile
+              Full Name
             </label>
 
             <input
-              type="url"
-              placeholder="https://www.linkedin.com/in/yourname"
-              value={linkedin}
-              onChange={(e) =>
-                setLinkedin(e.target.value)
-              }
-              required
+              type="text"
+              value={userName}
+              readOnly
+            />
+
+          </div>
+
+
+          {/* EMAIL */}
+
+          <div className="form-group">
+
+            <label>
+              Email
+            </label>
+
+            <input
+              type="email"
+              value={userEmail}
+              readOnly
             />
 
           </div>
@@ -162,12 +248,33 @@ function JoinProject() {
           </div>
 
 
-          {/* MESSAGE */}
+          {/* LINKEDIN */}
 
           <div className="form-group">
 
             <label>
-              Why do you want to join?
+              LinkedIn Profile
+            </label>
+
+            <input
+              type="url"
+              placeholder="https://www.linkedin.com/in/yourname"
+              value={linkedin}
+              onChange={(e) =>
+                setLinkedin(e.target.value)
+              }
+              required
+            />
+
+          </div>
+
+
+          {/* WHY JOIN */}
+
+          <div className="form-group">
+
+            <label>
+              Why do you want to join this project?
             </label>
 
             <textarea
@@ -182,9 +289,20 @@ function JoinProject() {
           </div>
 
 
+          {/* NOTE */}
+
+          <p className="join-form-note">
+            Your request will be reviewed by the
+            project leader. You can send only one
+            request for this project.
+          </p>
+
+
+          {/* SUBMIT */}
+
           <button
             type="submit"
-            className="join-project-button"
+            className="join-submit-button join-project-button"
             disabled={loading}
           >
 
@@ -194,11 +312,14 @@ function JoinProject() {
 
           </button>
 
+
         </form>
+
 
       </main>
 
     </div>
+
   );
 }
 
